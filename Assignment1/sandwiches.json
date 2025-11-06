@@ -1,0 +1,22 @@
+[
+    {
+        "name": "tuna melt",
+        "ingredients": ["tuna", "cheese", "mayo"]
+    },
+    {
+        "name": "ham sandwich",
+        "ingredients": ["ham", "lettuce", "mustard"]
+    },
+    {
+        "name": "vegan wrap",
+        "ingredients": ["hummus", "tomato", "spinach"]
+    },
+    {
+        "name": "egg salad sandwich",
+        "ingredients": ["egg", "mayo", "celery"]
+    },
+    {
+        "name": "chicken panini",
+        "ingredients": ["chicken", "cheese", "pesto"]
+    }
+]
