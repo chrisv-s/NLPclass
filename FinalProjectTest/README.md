@@ -6,7 +6,7 @@ So, this project started because I was curious why AI-generated text often seems
 
 I wanted to play around with this, so I built a little system that takes two sentences and tries to generate a third sentence that could sort of relate to both. It doesn’t try to actually “understand” the sentences. Instead, it looks at the overlap in meaning using word vectors and picks words that are kind of in the middle between the two inputs. The results are often neutral, a bit funny, or weirdly abstract—basically highlighting the gap between how humans interpret language and what AI actually does.
 
-## How It Works
+## How It Works 
 
 The system is actually pretty simple under the hood, but I tried to make it as transparent as possible:
 

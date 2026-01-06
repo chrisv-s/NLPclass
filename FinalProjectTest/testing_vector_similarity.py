@@ -1,7 +1,7 @@
 import spacy
 nlp = spacy.load('en_core_web_md')
 
-# def content_words(doc): #this needs to be critically reflected
+# def content_words(doc): # this needs to be critically reflected: what do I want to analyze
    # return [
     #    token for token in doc if token.pos_ in {"NOUN", "VERB", "ADJ"}
     #    and not token.is_stop
@@ -9,16 +9,14 @@ nlp = spacy.load('en_core_web_md')
 
 def meaningful_chunks(doc):
     chunks = []
-    for chunk in doc.noun_chunks:  # grabs full noun phrases
+    for chunk in doc.noun_chunks:
         chunks.append(chunk.text)
-    # Add main verbs (roots of sentences)
     for token in doc:
         if token.pos_ == "VERB" and token.dep_ == "ROOT":
             chunks.append(token.text)
     return chunks
 
-
-# debugging lens
+# debugging
 def overlapping_words(sent_a, sent_b, top_n=5):
     doc_a = nlp(sent_a)
     doc_b = nlp(sent_b)
@@ -36,7 +34,6 @@ def overlapping_words(sent_a, sent_b, top_n=5):
 
     overlaps.sort(reverse=True)
     return overlaps[:top_n] # de
-
 
 results = overlapping_words(
     "The fruit fell far from the tree.",
@@ -87,7 +84,6 @@ def leftovers_max(sentence_a, sentence_b):
                     best_sim = sim
         max_sims[tb.text] = best_sim
 
-    # Convert dict to list of tuples
     return list(max_sims.items())
 
 
