@@ -2,34 +2,56 @@
 
 ## What This Project Is About
 
-So, this project started because I was curious why AI-generated text often seems “ambiguous” and whether that ambiguity actually *means* anything. In normal human language, ambiguity is when a sentence can make sense in two or more ways. But with AI, it’s often not really ambiguity—it’s more like the AI is unsure and just produces vague, kind of bland, or generically plausible sentences.
+This project started because I was curious why AI-generated text often feels “ambiguous” and what that actually means. In human language, ambiguity usually has a reason — a sentence can genuinely be interpreted in multiple ways. With AI, though, what looks like ambiguity is often just statistical uncertainty: the AI generates plausible but vague outputs without true understanding.
 
-I wanted to play around with this, so I built a little system that takes two sentences and tries to generate a third sentence that could sort of relate to both. It doesn’t try to actually “understand” the sentences. Instead, it looks at the overlap in meaning using word vectors and picks words that are kind of in the middle between the two inputs. The results are often neutral, a bit funny, or weirdly abstract—basically highlighting the gap between how humans interpret language and what AI actually does.
+My main goal was to explore what happens when meaning is averaged in a computational sense. I built a system that takes two sentences and generates a third sentence that lies somewhere in the **semantic middle**. This doesn’t mean the new sentence truly captures the meaning of both inputs — rather, it is a **mathematical midpoint in vector space**. The system uses word embeddings to find words that are, in a sense, “between” the two inputs. The results are usually abstract, neutral, or funny, highlighting how AI language models smooth over differences probabilistically.
 
-## How It Works 
+## How It Works — Main Pipeline (`main.py`)
 
-The system is actually pretty simple under the hood, but I tried to make it as transparent as possible:
+1. **Analyze the sentences**: I use **spaCy** to extract subject-verb-object (SVO) structures from two input sentences.
+2. **Compute semantic vectors**: For each SVO element, the code considers word-level vectors and optionally phrase/chunk-level vectors (e.g., noun phrases, subject-verb or verb-object spans).
+3. **Pick candidate words**: Using a curated list of common English words, the system selects words closest to the semantic midpoint while respecting part-of-speech constraints.
+4. **Assemble the sentence**: The chosen words are combined into a new SVO sentence.
 
-1. **Analyze the sentences**: I use **spaCy** to break each input into subject-verb-object (SVO) chunks.
-2. **Find the middle**: For each subject, verb, and object, I compute a kind of semantic “midpoint” based on their word vectors. I actually do this at two levels—word-level and chunk-level—so the system considers both single words and small phrases.
-3. **Pick candidates**: Instead of hardcoding words, the system looks at a list of common English words and finds the ones closest to the midpoint while still being the right type (noun, verb, pronoun, etc.).
-4. **Build a sentence**: Finally, it puts together a new SVO sentence using these candidates.
+The goal is not grammatical perfection — it is to experiment with what a **mathematical “middle meaning”** looks like in AI-generated text.
 
-The goal isn’t to make perfect sentences—it’s to see what happens when you smooth over the differences statistically and let the AI pick “neutral” words.
+### Example
 
-## What I Learned / Observations
+- Input A: “The man ate an apple.”  
+- Input B: “The wizard drank the potion.”  
+- Output (semantic middle): “Village eat ocean.”
 
-.....
+This output is abstract, funny, and illustrates how semantic averaging can produce plausible but nonsensical sentences.
+
+## Part 2 — Ambiguity Simulation (`ambiguity_simulation.py`)
+
+Based on my professor’s feedback, I also wanted to explore **statistical averageness**: could we use a curated set of **commonly occurring, vague phrases** to simulate ambiguity?  
+
+- I created a text file (`common_ambiguous_phrases.txt`) containing **high-frequency, grammatically correct VO pairs** like “do something,” “take part,” “deal with.”  
+- Separately, I defined a list of ambiguous subjects like “someone,” “people,” or “they.”  
+- The simulation pipeline compares each SVO element of the two input sentences to the vectors of these phrases.  
+- Instead of calculating a midpoint, the system selects the **phrase with the highest average similarity to both sentences**.  
+- The chosen subject and VO pair are combined, using **lemminflect** to ensure verb agreement, to generate a final “ambiguity sentence.”
+
+This second part is more of a **prototype**, showing what is possible when we experiment with curated ambiguity. It does not reflect natural AI ambiguity — I am heavily influencing the outputs by defining the phrases — but it provides a **controlled way to test how vague, statistically common expressions behave** in combination with the semantic vectors.
+
+## Observations / Reflections
+
+- **Computational vs. human ambiguity**: What the system produces is not human-like ambiguity. The midpoint is mathematical, and phrases chosen from the ambiguity simulation are curated.  
+- **Abstract outputs**: The sentences are often funny or nonsensical, e.g., “Someone take action,” showing how AI smooths over differences probabilistically.  
+- **Pipeline experimentation**: I experimented with combining word-level and phrase-level vectors, adding randomness, and even exploring Markov-style chaining for richer outputs.  
+- **Limitations**: SpaCy’s SVO extraction is not perfect for complex sentences, vector averaging can produce semantic voids, and the curated phrases strongly shape the simulation.  
+- **Reflection**: The project helped me understand the “fuzziness” of AI-generated language and the difference between true human ambiguity and statistical or semantic averaging. It also demonstrates how small interventions — like a curated phrase list — can produce controllable ambiguity for experiments.
 
 ## How to Try It
 
-1. Run the Python script.
-2. Enter one sentences when prompted.
-3. Watch the pipeline generate a third sentence that’s (according to the language model) in the middle of the first two.
+1. Run `main.py` for the semantic middle experiment.  
+2. Run `ambiguity_simulation.py` for the curated ambiguity test.  
+3. Enter one or two sentences when prompted and observe the generated outputs.
 
 ## Dependencies
 
-- Python 3
-- [spaCy](https://spacy.io/) with the `en_core_web_md` model
-- NumPy
-
+- Python 3  
+- [spaCy](https://spacy.io/) with the `en_core_web_md` model  
+- NumPy  
+- [lemminflect](https://github.com/bjascob/lemminflect) (for verb inflection)

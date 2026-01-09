@@ -9,7 +9,7 @@ nlp = spacy.load("en_core_web_md")  # might use lg later for better vectors
 
 # Load 1000 most common words source: https://github.com/powerlanguage/word-lists/blob/master/1000-most-common-words.txt
 #
-with open("1000-most-common-words.txt", "r") as f:
+with open("../google-10000-english-usa-no-swears.txt", "r") as f:
     common_words = [w.strip().lower() for w in f if w.strip()]
 
 # POS-tag each word and store as SpaCy token
